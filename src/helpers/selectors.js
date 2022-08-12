@@ -24,3 +24,34 @@ export function getInterview(state, interview) {
     interviewer: interviewerInformation
   }
 }
+
+export function getInterviewersForDay(state, day){
+  let result = [];
+  let days = state.days;
+  let interviewersForTheStateDay;
+
+  //Checks if the state.days is empty or not
+  if(state.days.length < 1){
+    return [];
+  }
+
+  //Retrieves interviewers for the day
+  for(const stateDay of days){
+    if(stateDay.name === day){
+      interviewersForTheStateDay = stateDay.interviewers;
+    }
+  }
+
+  //if there is no day found, return empty array
+  if(!interviewersForTheStateDay){
+    return [];
+  }
+
+  //Push interviewer objects to results;
+  for(const id of interviewersForTheStateDay){
+    let interviewer = state.interviewers[id];
+    result.push(interviewer);
+  }
+
+  return result;
+}
