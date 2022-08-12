@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import DayList from "./DayList";
 import Appointment from "components/Appointment";
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 import "components/Application.scss";
 
 export default function Application(props) {
@@ -30,17 +30,17 @@ export default function Application(props) {
 
   const allAppointments = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
+    const interviewers = getInterviewersForDay(state, state.day);
 
 
     return (
       <Appointment
         key={appointment.id}
-        {...appointment}
         id={appointment.id}
         time={appointment.time}
         interview={interview}
+        interviewers={interviewers}
       />
-
     )
   })
 
@@ -60,11 +60,7 @@ export default function Application(props) {
             onChange={setDay}
           />
         </nav>
-        <img
-          className="sidebar__lhl sidebar--centered"
-          src="images/lhl.png"
-          alt="Lighthouse Labs"
-        />      </section>
+        <img className="sidebar__lhl sidebar--centered" src="images/lhl.png" alt="Lighthouse Labs" />      </section>
       <section className="schedule">
         {allAppointments}
         <Appointment key="last" time="5pm" />
