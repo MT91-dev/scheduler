@@ -13,6 +13,28 @@ export default function useApplicationData() {
 
   const setDay = day => setState({ ...state, day });
 
+  useEffect(() => {
+    Promise.all([
+      axios.get('http://localhost:8001/api/days'),
+      axios.get('http://localhost:8001/api/appointments'),
+      axios.get('http://localhost:8001/api/interviewers')
+    ]).then((all) => {
+      setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
+    });
+  }, []);
+
+  //find the day based on the state.day
+  function findDay(day) {
+    const daysOfWeek = {
+      Monday: 0,
+      Tuesday: 1,
+      Wednesday: 2,
+      Thursday: 3,
+      Friday: 4
+    }
+    return daysOfWeek[day]
+  }
+
   //function that submits axios put request to update database
   const bookInterview = (id, interview) => {
 
@@ -26,6 +48,19 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
+    //find the day of the week based on the return value of findDay
+    const dayOfWeek = findDay(state.day)
+
+    //if the appointment is booked, subtract 1 from the spots available
+    let day = {
+      ...state.days[dayOfWeek],
+      spots: state.days[dayOfWeek].spots - 1
+    }
+
+    //update the days array with the new spots available
+    let days = state.days
+    days[dayOfWeek] = day;
+
     const putRequestAPIURL = `http://localhost:8001/api/appointments/${id}`;
 
     let requestData = {
@@ -34,7 +69,7 @@ export default function useApplicationData() {
     };
 
     return axios.put(putRequestAPIURL, appointment).then(() => {
-      setState({ ...state, appointments })
+      setState({ ...state, appointments, days })
     })
   }
 
@@ -51,6 +86,19 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
+    //find the day of the week based on the return value of findDay
+    const dayOfWeek = findDay(state.day)
+
+    //if the appointment is cancelled, add 1 to the spots available
+    const day = {
+      ...state.days[dayOfWeek],
+      spots: state.days[dayOfWeek].spots + 1
+    }
+
+    //update the days array with the new spots available
+    let days = state.days
+    days[dayOfWeek] = day;
+
     const deleteRequestAPIURL = `http://localhost:8001/api/appointments/${id}`;
 
     let requestData = {
@@ -59,24 +107,9 @@ export default function useApplicationData() {
     };
 
     return axios.delete(deleteRequestAPIURL, appointment).then(() => {
-      setState({ ...state, appointments})
+      setState({ ...state, appointments, days })
     })
   }
 
-  useEffect(() => {
-    Promise.all([
-      axios.get('http://localhost:8001/api/days'),
-      axios.get('http://localhost:8001/api/appointments'),
-      axios.get('http://localhost:8001/api/interviewers')
-    ]).then((all) => {
-      setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
-    });
-  }, []);
-
-  return {
-    state, 
-    setDay,
-    bookInterview,
-    cancelInterview
-  }
+  return { state, setDay, bookInterview, cancelInterview };
 }
