@@ -10,6 +10,7 @@ describe("Appointment", () => {
   it("renders without crashing", () => {
     render(<Appointment />);
   });
+  
 
   it("doesn't call the function", () => {
     const fn = jest.fn();
@@ -27,7 +28,7 @@ describe("Appointment", () => {
     fn(10);
     expect(fn).toHaveBeenCalledWith(10);
    });
-   
+
    it("uses the mock implementation", () => {
     const fn = jest.fn((a, b) => 42);
     fn(1, 2);
