@@ -4,6 +4,7 @@ import axios from "axios";
 
 export default function useApplicationData() {
 
+  //states object holding all states
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -13,6 +14,7 @@ export default function useApplicationData() {
 
   const setDay = day => setState({ ...state, day });
 
+  //Run all axios requests to api and retrieve days, appointments and interviewers data
   useEffect(() => {
     Promise.all([
       axios.get('http://localhost:8001/api/days'),
@@ -68,6 +70,7 @@ export default function useApplicationData() {
       data: appointment
     };
 
+    //update the database with new appointment data via axios put request, then update all relevant states
     return axios.put(putRequestAPIURL, appointment).then(() => {
       setState({ ...state, appointments, days })
     })
@@ -106,6 +109,7 @@ export default function useApplicationData() {
       data: appointment
     };
 
+    //update the database by deleting selected appointment data via axios delete request, then update all relevant states
     return axios.delete(deleteRequestAPIURL, appointment).then(() => {
       setState({ ...state, appointments, days })
     })
