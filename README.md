@@ -3,8 +3,8 @@
 
 Hello everyone and welcome to Interview Scheduler, which is a Single Page Application (SPA) for organizing & tracking a students interviews on any given day of the week! The application has been built with the latest tools including React which a powerful front-end framework, to provide the user with a dynamic and seamless experience.
 The App utilizes React's built-in and custom hooks to allow for a user to add, edit and delete their appointments in real time.
-The data utilized by the app is persisted by the API server using a PostgreSQL database. The client application communicates with an API server over HTTP protocols using CRUD/BREAD operations, with API responses with the widely used JSON format.
-For quality and robustness of the application, the testing has follows best practices outlined by the Test Driven Development methods (TDD). The testing conducted included unit and integration testing of components in isolation using the Jest library, followed by end-to-end testing performed using Cypress.
+The data utilized by the app is persisted by the API server using a PostgreSQL database. The client application communicates with the API server over HTTP protocols using CRUD/BREAD operations, resulting in an API responses that is in the widely used JSON format.
+For quality and robustness of the application, the testing conducted during development follows the best practices outlined by the Test Driven Development methods (TDD). The testing conducted included unit and integration testing of components in isolation using the Jest library, followed by end-to-end testing performed using Cypress.
 
 ## Project Features
 - The landing page showcases the appointment days (i.e. Monday to Friday) which are displayed and color-coded to indicate selection as well as availability on any day.
