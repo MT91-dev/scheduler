@@ -1,5 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import DayList from "./DayList";
 import Appointment from "components/Appointment";
 import useApplicationData from "hooks/useApplicationData";
@@ -45,7 +44,8 @@ export default function Application(props) {
             onChange={setDay}
           />
         </nav>
-        <img className="sidebar__lhl sidebar--centered" src="images/lhl.png" alt="Lighthouse Labs" />      </section>
+        <img className="sidebar__lhl sidebar--centered" src="images/lhl.png" alt="Lighthouse Labs" />
+      </section>
       <section className="schedule">
         {allAppointments}
         <Appointment key="last" time="5pm" />
