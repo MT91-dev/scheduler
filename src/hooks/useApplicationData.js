@@ -17,9 +17,9 @@ export default function useApplicationData() {
   //Run all axios requests to api and retrieve days, appointments and interviewers data
   useEffect(() => {
     Promise.all([
-      axios.get('http://localhost:8001/api/days'),
-      axios.get('http://localhost:8001/api/appointments'),
-      axios.get('http://localhost:8001/api/interviewers')
+      axios.get('/api/days'),
+      axios.get('/api/appointments'),
+      axios.get('/api/interviewers')
     ]).then((all) => {
       setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
     });
@@ -53,22 +53,30 @@ export default function useApplicationData() {
     //find the day of the week based on the return value of findDay
     const dayOfWeek = findDay(state.day)
 
-    //if the appointment is booked, subtract 1 from the spots available
+    //update the day based on the sate of dayOfWeek
     let day = {
       ...state.days[dayOfWeek],
-      spots: state.days[dayOfWeek].spots - 1
+      spots: state.days[dayOfWeek]
     }
 
-    //update the days array with the new spots available
+    //if the appointment is booked and an interview exists, subtract 1 from the spots available, else, leave it as is
+    if (!state.appointments[id].interview) {
+      day = {
+        ...state.days[dayOfWeek],
+        spots: state.days[dayOfWeek].spots - 1
+      }
+    } else {
+      day = {
+        ...state.days[dayOfWeek],
+        spots: state.days[dayOfWeek].spots
+      }
+    }
+
+    //update the days array with the new spots available from day
     let days = state.days
     days[dayOfWeek] = day;
 
-    const putRequestAPIURL = `http://localhost:8001/api/appointments/${id}`;
-
-    let requestData = {
-      putRequestAPIURL,
-      data: appointment
-    };
+    const putRequestAPIURL = `/api/appointments/${id}`;
 
     //update the database with new appointment data via axios put request, then update all relevant states
     return axios.put(putRequestAPIURL, appointment).then(() => {
@@ -102,12 +110,7 @@ export default function useApplicationData() {
     let days = state.days
     days[dayOfWeek] = day;
 
-    const deleteRequestAPIURL = `http://localhost:8001/api/appointments/${id}`;
-
-    let requestData = {
-      deleteRequestAPIURL,
-      data: appointment
-    };
+    const deleteRequestAPIURL = `/api/appointments/${id}`;
 
     //update the database by deleting selected appointment data via axios delete request, then update all relevant states
     return axios.delete(deleteRequestAPIURL, appointment).then(() => {
